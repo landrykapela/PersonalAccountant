@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">Personal Accountant</string>
     <string name="action_settings">Settings</string>
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
+    <string name="description">Description</string>
+    <string name="amount">Amount</string>
+    <string name="pay_to">Paid to</string>
+    <string name="pay_by">Received from</string>
+    <string name="save">Save</string>
+    <string name="new_record">New Record</string>
 </resources>

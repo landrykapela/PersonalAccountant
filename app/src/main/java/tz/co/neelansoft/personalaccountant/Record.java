@@ -2,6 +2,7 @@ package tz.co.neelansoft.personalaccountant;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -17,24 +18,35 @@ public class Record {
     private int id;
     private double amount;
     private String description;
+    private int record_type;
     @ColumnInfo(name = "updated_at")
+
     String updatedAt;
+
 
     private static final String DATE_FORMAT = "dd-MM-yyyy";
 
     @Ignore
-    public Record(double amount, String description){
+    public Record(double amount, String description, int record_type){
         this.amount = amount;
         this.description = description;
-        this.updatedAt = new SimpleDateFormat(DATE_FORMAT).format(new Date());
+        this.record_type = record_type;
+        this.updatedAt = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(new Date());
     }
-    public Record(int id, double amount, String description){
+    public Record(int id, double amount, String description, int record_type){
         this.id = id;
         this.amount = amount;
         this.description = description;
-        this.updatedAt = new SimpleDateFormat(DATE_FORMAT).format(new Date());
+        this.record_type = record_type;
+        this.updatedAt = new SimpleDateFormat(DATE_FORMAT,Locale.getDefault()).format(new Date());
+    }
+    public int getRecordType() {
+        return record_type;
     }
 
+    public void setRecordType(int record_type) {
+        this.record_type = record_type;
+    }
     public int getId() {
         return id;
     }
