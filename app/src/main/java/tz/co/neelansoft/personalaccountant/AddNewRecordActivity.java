@@ -2,9 +2,14 @@ package tz.co.neelansoft.personalaccountant;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
+import tz.co.neelansoft.personalaccountant.library.AppExecutors;
+import tz.co.neelansoft.personalaccountant.library.PADatabase;
 
 public class AddNewRecordActivity extends AppCompatActivity {
 
@@ -14,6 +19,7 @@ public class AddNewRecordActivity extends AppCompatActivity {
     private RadioGroup mRadioGroup;
     private RadioButton mRadioIncome;
     private RadioButton mRadioExpense;
+    private Button mButtonSave;
     private int recordType;
 
     @Override
@@ -29,6 +35,8 @@ public class AddNewRecordActivity extends AppCompatActivity {
         mRadioGroup      = findViewById(R.id.radioGroup);
         mRadioIncome     = findViewById(R.id.rb_income);
         mRadioExpense    = findViewById(R.id.rb_expense);
+
+        mButtonSave      = findViewById(R.id.btn_save);
 
         mRadioGroup.check(R.id.rb_expense);
 
@@ -52,11 +60,63 @@ public class AddNewRecordActivity extends AppCompatActivity {
             }
         });
 
-        Record record = new Record(Double.parseDouble(mTextAmount.getText().toString()),mTextDescription.getText().toString(),recordType);
+        validateFields();
+
+        mButtonSave.setOnClickListener(new View.OnClickListener(){
+           @Override
+           public void onClick(View view){
+               Record record = new Record(Double.parseDouble(mTextAmount.getText().toString()),mTextDescription.getText().toString(),recordType);
+               saveRecord(record);
+           }
+        });
 
     }
 
-    private void saveRecord(Record rec){
+    private void validateFields(){
+        boolean allFieldsValid = false;
+        String amount = mTextAmount.getText().toString();
+        String description = mTextDescription.getText().toString();
+        String payer = mTextPayer.getText().toString();
+        if(!amount.isEmpty() && amount.length() > 0){
+            if(!description.isEmpty() && description.length() > 0){
+                if(!payer.isEmpty() && payer.length() > 0){
+                    allFieldsValid = true;
+                }
+                else{
+                    mTextPayer.setError("Empty field");
+                }
+            }
+            else{
+                mTextDescription.setError("Empty field");
+            }
+        }
+        else{
+            mTextAmount.setError("Empty field");
+        }
 
+        if(allFieldsValid){
+            enableSave(allFieldsValid);
+        }
+    }
+
+    private void enableSave(boolean state){
+        if(state) {
+            mButtonSave.setVisibility(View.VISIBLE);
+        }
+        else{
+            mButtonSave.setVisibility(View.GONE);
+        }
+        mButtonSave.setEnabled(state);
+    }
+    private void saveRecord(final Record rec){
+        final PADatabase db = PADatabase.getDatabaseInstance(AddNewRecordActivity.this);
+        AppExecutors.getInstance().diskIO().execute(
+            new Runnable(){
+            @Override
+            public void run(){
+              db.dao().insertRecord(rec);
+            }
+        });
+        finish();
     }
 }

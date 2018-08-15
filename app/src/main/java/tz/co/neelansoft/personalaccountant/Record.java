@@ -18,7 +18,7 @@ public class Record {
     private int id;
     private double amount;
     private String description;
-    private int record_type;
+    private int recordType;
     @ColumnInfo(name = "updated_at")
 
     String updatedAt;
@@ -27,25 +27,25 @@ public class Record {
     private static final String DATE_FORMAT = "dd-MM-yyyy";
 
     @Ignore
-    public Record(double amount, String description, int record_type){
+    public Record(double amount, String description, int recordType){
         this.amount = amount;
         this.description = description;
-        this.record_type = record_type;
+        this.recordType = recordType;
         this.updatedAt = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(new Date());
     }
-    public Record(int id, double amount, String description, int record_type){
+    public Record(int id, double amount, String description, int recordType){
         this.id = id;
         this.amount = amount;
         this.description = description;
-        this.record_type = record_type;
+        this.recordType = recordType;
         this.updatedAt = new SimpleDateFormat(DATE_FORMAT,Locale.getDefault()).format(new Date());
     }
     public int getRecordType() {
-        return record_type;
+        return recordType;
     }
 
-    public void setRecordType(int record_type) {
-        this.record_type = record_type;
+    public void setRecordType(int recordType) {
+        this.recordType = recordType;
     }
     public int getId() {
         return id;
