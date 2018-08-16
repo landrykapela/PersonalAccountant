@@ -7,6 +7,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
+
+import tz.co.neelansoft.personalaccountant.library.Config;
+
 public class TransactionDetailsActivity extends AppCompatActivity {
 
     private TextView mTextAmount;
@@ -49,9 +53,7 @@ public class TransactionDetailsActivity extends AppCompatActivity {
         outState.putParcelable("record",my_record);
     }
     private void setData(Record record){
-        java.util.Currency tsh = java.util.Currency.getInstance("TSH");
-        java.text.NumberFormat format = java.text.NumberFormat.getCurrencyInstance(java.util.Locale.getDefault());
-        format.setCurrency(tsh);
+        NumberFormat format = Config.CurrencyFormat();
         mTextAmount.setText(String.valueOf(format.format(record.getAmount())));
 
         mTextTransactionDate.setText(record.getUpdatedAt());

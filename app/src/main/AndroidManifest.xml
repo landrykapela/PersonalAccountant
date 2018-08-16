@@ -21,6 +21,7 @@
         </activity>
         <activity android:name=".AddNewRecordActivity" android:parentActivityName=".MainActivity" android:label="@string/new_record"/>
         <activity android:name=".TransactionDetailsActivity" android:parentActivityName=".MainActivity" android:label="@string/transaction_details"/>
+        <activity android:name=".AccountActivity" android:parentActivityName=".MainActivity" android:label="@string/my_account"/>
     </application>
 
 </manifest>

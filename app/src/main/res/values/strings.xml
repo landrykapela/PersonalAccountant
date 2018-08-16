@@ -12,4 +12,9 @@
     <string name="type">Transaction Type</string>
     <string name="transaction_date">Transaction Date</string>
     <string name="transaction_details">Transaction Details</string>
+    <string name="my_account">My Account</string>
+    <string name="account">Account</string>
+    <string name="total_income">Total Income</string>
+    <string name="total_expense">Total Expenditure</string>
+    <string name="balance">Your Account Balance</string>
 </resources>

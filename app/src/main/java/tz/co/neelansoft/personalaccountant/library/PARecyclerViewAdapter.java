@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 import tz.co.neelansoft.personalaccountant.R;
@@ -81,9 +82,7 @@ public class PARecyclerViewAdapter extends RecyclerView.Adapter<PARecyclerViewAd
 
         public void bind(int position){
             Record record = getRecords().get(position);
-            java.util.Currency tsh = java.util.Currency.getInstance("TSH");
-            java.text.NumberFormat format = java.text.NumberFormat.getCurrencyInstance(java.util.Locale.getDefault());
-            format.setCurrency(tsh);
+            NumberFormat format = Config.CurrencyFormat();
             String amount = String.valueOf(format.format(record.getAmount()));
             String date   = record.getUpdatedAt();
             int recordType = record.getRecordType();

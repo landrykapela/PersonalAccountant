@@ -86,12 +86,24 @@ public class MainActivity extends AppCompatActivity implements PARecyclerViewAda
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(id) {
+            case R.id.action_settings:
+                openSettingsActivity();
+                return true;
+            case R.id.action_account:
+                openAccountActivity();
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openAccountActivity() {
+        startActivity(new Intent(getApplicationContext(),AccountActivity.class));
+    }
+
+    private void openSettingsActivity() {
+        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+
     }
 
     @Override
