@@ -9,4 +9,7 @@
     <string name="pay_by">Received from</string>
     <string name="save">Save</string>
     <string name="new_record">New Record</string>
+    <string name="type">Transaction Type</string>
+    <string name="transaction_date">Transaction Date</string>
+    <string name="transaction_details">Transaction Details</string>
 </resources>

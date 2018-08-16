@@ -18,15 +18,15 @@ public class PARecyclerViewAdapter extends RecyclerView.Adapter<PARecyclerViewAd
 
     private List<Record> mRecords;
     private Context context;
-    private OnItemClickListener OnItemClickListener;
+    private ItemClickListener ItemClickListener;
 
-    public interface OnItemClickListener{
+    public interface ItemClickListener{
         void onItemClick(int itemId);
     }
 
-    public PARecyclerViewAdapter(Context context, OnItemClickListener listener){
+    public PARecyclerViewAdapter(Context context, ItemClickListener listener){
         this.context = context;
-        this.OnItemClickListener = listener;
+        this.ItemClickListener = listener;
     }
     @NonNull
     @Override
@@ -49,6 +49,14 @@ public class PARecyclerViewAdapter extends RecyclerView.Adapter<PARecyclerViewAd
 
     public List<Record> getRecords(){
         return this.mRecords;
+    }
+    public Record getRecordWithId(int itemId){
+        Record r = new Record();
+        for(int i=0; i< mRecords.size();i++){
+            if(mRecords.get(i).getId() == itemId)
+                r =mRecords.get(i);
+        }
+        return r;
     }
 
     public void setRecords(List<Record> list){
@@ -73,8 +81,10 @@ public class PARecyclerViewAdapter extends RecyclerView.Adapter<PARecyclerViewAd
 
         public void bind(int position){
             Record record = getRecords().get(position);
-
-            String amount = "TSH "+String.valueOf(record.getAmount());
+            java.util.Currency tsh = java.util.Currency.getInstance("TSH");
+            java.text.NumberFormat format = java.text.NumberFormat.getCurrencyInstance(java.util.Locale.getDefault());
+            format.setCurrency(tsh);
+            String amount = String.valueOf(format.format(record.getAmount()));
             String date   = record.getUpdatedAt();
             int recordType = record.getRecordType();
             if(recordType != 0){
@@ -88,9 +98,9 @@ public class PARecyclerViewAdapter extends RecyclerView.Adapter<PARecyclerViewAd
         }
 
         @Override
-        public void onClick(View view){
+        public void onClick(View v){
             int itemId = mRecords.get(getAdapterPosition()).getId();
-            OnItemClickListener.onItemClick(itemId);
+            ItemClickListener.onItemClick(itemId);
         }
     }
 }

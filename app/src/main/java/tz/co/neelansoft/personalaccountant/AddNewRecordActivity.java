@@ -2,6 +2,8 @@ package tz.co.neelansoft.personalaccountant;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,7 +62,56 @@ public class AddNewRecordActivity extends AppCompatActivity {
             }
         });
 
-        validateFields();
+        mTextAmount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                validateFields();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validateFields();
+            }
+        });
+
+        mTextDescription.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                validateFields();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validateFields();
+            }
+        });
+
+        mTextPayer.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                validateFields();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validateFields();
+            }
+        });
 
         mButtonSave.setOnClickListener(new View.OnClickListener(){
            @Override

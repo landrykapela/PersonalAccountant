@@ -10,9 +10,11 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 @Entity (tableName = "record")
-public class Record {
+public class Record implements Parcelable{
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -33,6 +35,8 @@ public class Record {
         this.recordType = recordType;
         this.updatedAt = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(new Date());
     }
+    @Ignore
+    public Record(){};
     public Record(int id, double amount, String description, int recordType){
         this.id = id;
         this.amount = amount;
@@ -78,4 +82,38 @@ public class Record {
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeDouble(amount);
+        dest.writeString(description);
+        dest.writeString(updatedAt);
+        dest.writeInt(recordType);
+    }
+
+    public Record(Parcel in){
+        this.id = in.readInt();
+        this.amount = in.readDouble();
+        this.description = in.readString();
+        this.updatedAt = in.readString();
+        this.recordType = in.readInt();
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator<Record>(){
+        @Override
+        public Record createFromParcel(Parcel source){
+            return new Record(source);
+        }
+
+        @Override
+        public Record[] newArray(int size){
+            return new Record[size];
+        }
+    };
 }

@@ -16,13 +16,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import tz.co.neelansoft.personalaccountant.library.AppExecutors;
 import tz.co.neelansoft.personalaccountant.library.PADatabase;
 import tz.co.neelansoft.personalaccountant.library.PARecyclerViewAdapter;
 
-public class MainActivity extends AppCompatActivity implements PARecyclerViewAdapter.OnItemClickListener{
+public class MainActivity extends AppCompatActivity implements PARecyclerViewAdapter.ItemClickListener{
 
     private PARecyclerViewAdapter mRecyclerViewAdapter;
     private RecyclerView mRecyclerView;
@@ -45,17 +46,30 @@ public class MainActivity extends AppCompatActivity implements PARecyclerViewAda
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
-        final PADatabase db = PADatabase.getDatabaseInstance(this);
-        LiveData<List<Record>> liveRecords = db.dao().getAllRecords();
-                liveRecords.observe(this, new Observer<List<Record>>() {
-                    @Override
-                    public void onChanged(@Nullable List<Record> records) {
-                        mRecyclerViewAdapter.setRecords(records);
-                        mRecyclerViewAdapter.notifyDataSetChanged();
-                    }
-                });
 
+        if(savedInstanceState == null) {
+            final PADatabase db = PADatabase.getDatabaseInstance(this);
+            LiveData<List<Record>> liveRecords = db.dao().getAllRecords();
+            liveRecords.observe(this, new Observer<List<Record>>() {
+                @Override
+                public void onChanged(@Nullable List<Record> records) {
+                    mRecyclerViewAdapter.setRecords(records);
+                    mRecyclerViewAdapter.notifyDataSetChanged();
+                }
+            });
 
+        }
+        else{
+            List<Record> myRecords = savedInstanceState.getParcelableArrayList("records");
+            mRecyclerViewAdapter.setRecords(myRecords);
+            mRecyclerViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("records",(ArrayList<Record>)mRecyclerViewAdapter.getRecords());
     }
 
     @Override
@@ -81,7 +95,9 @@ public class MainActivity extends AppCompatActivity implements PARecyclerViewAda
     }
 
     @Override
-    public void onItemClick(int itemPosition){
-        Toast.makeText(MainActivity.this, "Got it, id: "+mRecyclerViewAdapter.getRecords().get(itemPosition), Toast.LENGTH_SHORT).show();
+    public void onItemClick(int itemId){
+        Intent detail_intent = new Intent(getApplicationContext(),TransactionDetailsActivity.class);
+        detail_intent.putExtra("record",mRecyclerViewAdapter.getRecordWithId(itemId));
+        startActivity(detail_intent);
     }
 }
