@@ -2,18 +2,22 @@ package tz.co.neelansoft.personalaccountant;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements PARecyclerViewAda
 
     private PARecyclerViewAdapter mRecyclerViewAdapter;
     private RecyclerView mRecyclerView;
+    private TextView mTextNoRecords;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements PARecyclerViewAda
 
         mRecyclerView = findViewById(R.id.recyclerview);
         FloatingActionButton fab = findViewById(R.id.fab);
+        mTextNoRecords = findViewById(R.id.tv_no_data);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,24 +54,76 @@ public class MainActivity extends AppCompatActivity implements PARecyclerViewAda
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
 
         if(savedInstanceState == null) {
-            final PADatabase db = PADatabase.getDatabaseInstance(this);
-            LiveData<List<Record>> liveRecords = db.dao().getAllRecords();
-            liveRecords.observe(this, new Observer<List<Record>>() {
-                @Override
-                public void onChanged(@Nullable List<Record> records) {
-                    mRecyclerViewAdapter.setRecords(records);
-                    mRecyclerViewAdapter.notifyDataSetChanged();
-                }
-            });
-
+            retrieveRecords();
         }
         else{
             List<Record> myRecords = savedInstanceState.getParcelableArrayList("records");
             mRecyclerViewAdapter.setRecords(myRecords);
             mRecyclerViewAdapter.notifyDataSetChanged();
         }
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+
+                viewHolder.itemView.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                return false;
+            }
+
+            @Override
+            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(R.string.dialog_title_delete)
+                        .setMessage(R.string.dialog_confirm_delete)
+                        .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteRecord(viewHolder);
+                            }
+                        })
+                        .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                retrieveRecords();
+                            }
+                        });
+                if(!builder.create().isShowing()) builder.create().show();
+            }
+        }).attachToRecyclerView(mRecyclerView);
+
     }
 
+    private void retrieveRecords(){
+        final PADatabase db = PADatabase.getDatabaseInstance(this);
+        LiveData<List<Record>> liveRecords = db.dao().getAllRecords();
+        liveRecords.observe(this, new Observer<List<Record>>() {
+            @Override
+            public void onChanged(@Nullable List<Record> records) {
+                if(records.size() == 0){
+                    mTextNoRecords.setVisibility(View.VISIBLE);
+                }
+                else {
+                    mRecyclerViewAdapter.setRecords(records);
+                    mRecyclerViewAdapter.notifyDataSetChanged();
+                    mTextNoRecords.setVisibility(View.GONE);
+                }
+            }
+        });
+
+    }
+    private void deleteRecord(final RecyclerView.ViewHolder vh){
+        int index = vh.getAdapterPosition();
+
+        final PADatabase db = PADatabase.getDatabaseInstance(this);
+        final Record recordToDelete = mRecyclerViewAdapter.getRecords().get(index);
+        AppExecutors.getInstance().diskIO().execute(new Runnable(){
+            @Override
+            public void run(){
+                db.dao().deleteRecord(recordToDelete);
+            }
+        });
+    }
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);

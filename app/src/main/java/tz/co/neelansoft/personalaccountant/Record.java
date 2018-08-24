@@ -13,6 +13,9 @@ import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import tz.co.neelansoft.personalaccountant.library.Config;
+
+
 @Entity (tableName = "record")
 public class Record implements Parcelable{
 
@@ -21,29 +24,38 @@ public class Record implements Parcelable{
     private double amount;
     private String description;
     private int recordType;
-    @ColumnInfo(name = "updated_at")
 
+    @ColumnInfo(name = "updated_at")
     String updatedAt;
 
-
-    private static final String DATE_FORMAT = "dd-MM-yyyy";
+    private String payer;
 
     @Ignore
-    public Record(double amount, String description, int recordType){
+    public Record(double amount, String description, int recordType, String payer){
         this.amount = amount;
         this.description = description;
         this.recordType = recordType;
-        this.updatedAt = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(new Date());
+        this.updatedAt = Config.AppDateFormat.format(new Date());
+        this.payer = payer;
     }
     @Ignore
     public Record(){};
-    public Record(int id, double amount, String description, int recordType){
+    public Record(int id, double amount, String description, int recordType, String payer){
         this.id = id;
         this.amount = amount;
         this.description = description;
         this.recordType = recordType;
-        this.updatedAt = new SimpleDateFormat(DATE_FORMAT,Locale.getDefault()).format(new Date());
+        this.updatedAt = Config.AppDateFormat.format(new Date());
+        this.payer = payer;
     }
+    public String getPayer() {
+        return payer;
+    }
+
+    public void setPayer(String payer) {
+        this.payer = payer;
+    }
+
     public int getRecordType() {
         return recordType;
     }
@@ -94,6 +106,7 @@ public class Record implements Parcelable{
         dest.writeDouble(amount);
         dest.writeString(description);
         dest.writeString(updatedAt);
+        dest.writeString(payer);
         dest.writeInt(recordType);
     }
 
@@ -102,6 +115,7 @@ public class Record implements Parcelable{
         this.amount = in.readDouble();
         this.description = in.readString();
         this.updatedAt = in.readString();
+        this.payer = in.readString();
         this.recordType = in.readInt();
     }
 

@@ -17,4 +17,18 @@
     <string name="total_income">Total Income</string>
     <string name="total_expense">Total Expenditure</string>
     <string name="balance">Your Account Balance</string>
+    <string name="no_data">No Records to Display</string>
+    <string name="use_tzs">Use TZS</string>
+    <string name="currency_tzs">Currency set to TZS</string>
+    <string name="currency_default">Default Currency: USD</string>
+    <string name="use_comma">Use 1000 separator</string>
+    <string name="off">Off</string>
+    <string name="on">On</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="preferences">Preferences</string>
+    <string name="dialog_title_delete">Delete Record</string>
+    <string name="dialog_confirm_delete">Are you sure you want to delete this record?</string>
+    <string name="edit">Edit</string>
+    <string name="set_date">Set Date</string>
 </resources>

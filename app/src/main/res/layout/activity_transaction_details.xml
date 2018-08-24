@@ -26,7 +26,6 @@
             android:layout_marginRight="24dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
-            android:text="3,000,000,000 TSH"
             android:textStyle="bold"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/colorPrimaryDark"
@@ -37,8 +36,11 @@
     </LinearLayout>
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
             android:id="@+id/tv_label_type"
@@ -51,6 +53,16 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_label_payer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/pay_to"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintStart_toStartOf="@+id/tv_label_date"
+            app:layout_constraintTop_toBottomOf="@+id/tv_label_date" />
 
         <TextView
             android:id="@+id/tv_label_date"
@@ -69,8 +81,8 @@
             android:layout_marginTop="16dp"
             android:text="@string/description"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintStart_toStartOf="@+id/tv_label_date"
-            app:layout_constraintTop_toBottomOf="@+id/tv_label_date" />
+            app:layout_constraintStart_toStartOf="@+id/tv_label_payer"
+            app:layout_constraintTop_toBottomOf="@+id/tv_label_payer" />
 
         <TextView
             android:id="@+id/tv_type"
@@ -80,7 +92,6 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
-            android:text="Income"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="@+id/tv_label_type"
@@ -96,7 +107,6 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
-            android:text="July 23, 2018"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="@+id/tv_label_date"
@@ -105,21 +115,38 @@
             app:layout_constraintStart_toEndOf="@+id/tv_label_date" />
 
         <TextView
+            android:id="@+id/tv_payer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_label_payer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/tv_label_payer" />
+
+        <TextView
             android:id="@+id/tv_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/tv_label_description"
-            app:layout_constraintTop_toBottomOf="@+id/tv_label_description" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_label_description"
+            app:layout_constraintVertical_bias="0.0" />
     </android.support.constraint.ConstraintLayout>
+
 
 </android.support.constraint.ConstraintLayout>
 </ScrollView>

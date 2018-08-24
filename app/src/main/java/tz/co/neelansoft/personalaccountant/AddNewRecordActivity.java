@@ -1,28 +1,37 @@
 package tz.co.neelansoft.personalaccountant;
 
+import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import tz.co.neelansoft.personalaccountant.library.AppExecutors;
 import tz.co.neelansoft.personalaccountant.library.PADatabase;
 
 public class AddNewRecordActivity extends AppCompatActivity {
 
+    private static final String TAG = "AddNewRecordActivity";
     private EditText mTextAmount;
     private EditText mTextDescription;
     private EditText mTextPayer;
+    private TextView mTextSetDate;
     private RadioGroup mRadioGroup;
     private RadioButton mRadioIncome;
     private RadioButton mRadioExpense;
     private Button mButtonSave;
     private int recordType;
+    private boolean isNew = true;
+    private int recordId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -37,10 +46,32 @@ public class AddNewRecordActivity extends AppCompatActivity {
         mRadioGroup      = findViewById(R.id.radioGroup);
         mRadioIncome     = findViewById(R.id.rb_income);
         mRadioExpense    = findViewById(R.id.rb_expense);
+        mTextSetDate     = findViewById(R.id.tv_set_date);
+
 
         mButtonSave      = findViewById(R.id.btn_save);
 
         mRadioGroup.check(R.id.rb_expense);
+
+        Intent intent = getIntent();
+        if(intent.getParcelableExtra("record") != null && intent.getStringExtra("tag").equalsIgnoreCase("edit")){
+            isNew = false;
+            Record record_to_edit = intent.getParcelableExtra("record");
+            recordId = record_to_edit.getId();
+
+            mTextAmount.setText(String.valueOf(record_to_edit.getAmount()));
+            mTextDescription.setText(record_to_edit.getDescription());
+            mTextPayer.setText(record_to_edit.getPayer());
+
+            if(record_to_edit.getRecordType() == 0){
+                mRadioGroup.check(R.id.rb_income);
+            }
+            else{
+                mRadioGroup.check(R.id.rb_expense);
+            }
+
+           mButtonSave.setText("Update");
+        }
 
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -116,10 +147,19 @@ public class AddNewRecordActivity extends AppCompatActivity {
         mButtonSave.setOnClickListener(new View.OnClickListener(){
            @Override
            public void onClick(View view){
-               Record record = new Record(Double.parseDouble(mTextAmount.getText().toString()),mTextDescription.getText().toString(),recordType);
-               saveRecord(record);
+               Record record = new Record(Double.parseDouble(mTextAmount.getText().toString()),mTextDescription.getText().toString(),recordType, mTextPayer.getText().toString());
+               Toast.makeText(AddNewRecordActivity.this,"details: rt-"+recordType,Toast.LENGTH_SHORT).show();
+               if(isNew) saveRecord(record);
+               else {
+                   record.setId(recordId);
+                   updateRecord(record);}
            }
         });
+
+    }
+    private void showDatePicker(View v){
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment.show(getSupportFragmentManager(),"datePickerFragment");
 
     }
 
@@ -160,6 +200,7 @@ public class AddNewRecordActivity extends AppCompatActivity {
         mButtonSave.setEnabled(state);
     }
     private void saveRecord(final Record rec){
+        Log.e(TAG,"Creating record... "+rec.getId());
         final PADatabase db = PADatabase.getDatabaseInstance(AddNewRecordActivity.this);
         AppExecutors.getInstance().diskIO().execute(
             new Runnable(){
@@ -168,6 +209,19 @@ public class AddNewRecordActivity extends AppCompatActivity {
               db.dao().insertRecord(rec);
             }
         });
+        finish();
+    }
+
+    private void updateRecord(final Record rec){
+        Log.e(TAG,"Udating record... "+rec.getId());
+        final PADatabase db = PADatabase.getDatabaseInstance(AddNewRecordActivity.this);
+        AppExecutors.getInstance().diskIO().execute(
+                new Runnable(){
+                    @Override
+                    public void run(){
+                        db.dao().updateRecord(rec);
+                    }
+                });
         finish();
     }
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:title="@string/use_tzs"
+        android:key="pref_use_tzs"
+        android:summaryOff="@string/currency_default"
+        android:summaryOn="@string/currency_tzs"/>
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:title="@string/use_comma"
+        android:key="pref_use_comma"
+        android:summaryOff="@string/no"
+        android:summaryOn="@string/yes"/>
+</PreferenceScreen>

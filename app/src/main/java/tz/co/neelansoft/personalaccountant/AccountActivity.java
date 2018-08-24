@@ -8,12 +8,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import tz.co.neelansoft.personalaccountant.library.Config;
 import tz.co.neelansoft.personalaccountant.library.PADatabase;
 
 public class AccountActivity extends AppCompatActivity {
+
+    NumberFormat format = Config.CurrencyFormat();
 
 
 
@@ -25,6 +30,11 @@ public class AccountActivity extends AppCompatActivity {
         final TextView mTextBalance = findViewById(R.id.tv_balance);
         final TextView mTextIncome = findViewById(R.id.tv_income);
         final TextView mTextExpense = findViewById(R.id.tv_expense);
+        TextView mTextDate = findViewById(R.id.tv_date);
+        final TextView mTextDifference = findViewById(R.id.tv_diff);
+
+
+        mTextDate.setText(Config.LongAppDateFormat.format(new Date()));
 
 
         PADatabase db = PADatabase.getDatabaseInstance(this);
@@ -44,10 +54,10 @@ public class AccountActivity extends AppCompatActivity {
                     }
                 }
                 Double balance = income - expense;
-                NumberFormat format = Config.CurrencyFormat();
+                mTextDifference.setText(String.valueOf(balance));
                 mTextBalance.setText(String.valueOf(format.format(balance)));
-                mTextIncome.setText(String.valueOf(format.format(income)));
-                mTextExpense.setText(String.valueOf(format.format(expense)));
+                mTextIncome.setText(String.valueOf(income));
+                mTextExpense.setText(String.valueOf(expense));
                 if(balance < 0){
                     mTextBalance.setTextColor(getResources().getColor(R.color.colorAccent));
                 }

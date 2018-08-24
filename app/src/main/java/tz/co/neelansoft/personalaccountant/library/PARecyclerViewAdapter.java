@@ -10,10 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import tz.co.neelansoft.personalaccountant.R;
 import tz.co.neelansoft.personalaccountant.Record;
+
+import static tz.co.neelansoft.personalaccountant.library.Config.AppDateFormat;
 
 public class PARecyclerViewAdapter extends RecyclerView.Adapter<PARecyclerViewAdapter.ViewHolder>{
 
